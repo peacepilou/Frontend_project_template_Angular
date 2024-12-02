@@ -18,6 +18,8 @@ module.exports = tseslint.config(
       "@typescript-eslint/max-params": ["warn", { max: 3 }],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": "error",
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/no-inferrable-types": "off",
       "@typescript-eslint/member-ordering": [
         "error",
         {
