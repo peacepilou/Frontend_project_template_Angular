@@ -11,6 +11,7 @@ src/environments/environment.ts
 /out-tsc
 /bazel-out
 /documentation
+/coverage
 
 ## Node
 node_modules
