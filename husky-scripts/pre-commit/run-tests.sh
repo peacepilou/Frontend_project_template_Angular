@@ -6,6 +6,7 @@ echo_yellow "⚡ Running tests.."
 echo_separator_general
 
 if npm run test; then
+    echo
     echo_green "✅ All tests passed "
 else
     echo_separator
