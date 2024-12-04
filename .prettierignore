@@ -8,7 +8,7 @@
 *.spec.ts
 
 # Exclure les tests e2e
-e2e/**
+cypress/**
 
 # Ignorer les dossiers spécifiques
 /dist
