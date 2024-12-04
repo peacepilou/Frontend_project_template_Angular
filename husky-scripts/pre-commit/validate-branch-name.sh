@@ -2,7 +2,7 @@ source "$(dirname "$0")/../utils.sh"
 
 echo
 echo_separator_general
-echo_yellow "⚡ 3/3 - Running branch name validation..."
+echo_yellow "⚡ Running branch name validation..."
 echo_separator_general
 echo
 

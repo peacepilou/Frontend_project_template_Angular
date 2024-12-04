@@ -2,14 +2,14 @@ source "$(dirname "$0")/../utils.sh"
 
 echo
 echo_separator_general
-echo_yellow "⚡ 1/3 - Running Eslint..."
+echo_yellow "⚡ Running Eslint..."
 echo_separator_general
 if npx ng lint; then
     echo_green "✅ Eslint passed checks"
 
     echo
     echo_separator_general
-    echo_yellow "⚡ 2/3 - Running Prettier..."
+    echo_yellow "⚡ Running Prettier..."
     echo_separator_general
     echo
     if npx prettier --write .; then
