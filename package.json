@@ -9,7 +9,7 @@
     "test": "jest --verbose",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "lint": "ng lint",
+    "lint": "npx ng lint",
     "prettier": "npx prettier --write .",
     "prepare": "husky",
     "compodoc": "compodoc -p tsconfig.doc.json -s",
