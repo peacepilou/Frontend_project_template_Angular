@@ -6,10 +6,10 @@
     "outDir": "./dist/out-tsc",
     "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/*"],
-      "@environments/*": ["src/environments/*"],
-      "@core/*": ["src/app/core/*"],
-      "@shared/*": ["src/app/shared/*"],
+      // "@app/*": ["src/app/*"],
+      // "@environments/*": ["src/environments/*"],
+      // "@core/*": ["src/app/core/*"],
+      // "@shared/*": ["src/app/shared/*"],
     },
     "types": ["cypress", "node"],
     "strict": true,
@@ -38,8 +38,6 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "include": ["src/**/*.ts", "cypress/**/*.ts"],
-   "exclude": [
-    "**/*.spec.ts"
-  ]
+  "include": ["src/*.ts"],
+  "exclude": ["src/*.spec.ts"]
 }
