@@ -19,26 +19,12 @@ jobs:
       - name: Define branch protection rules
         id: define-rules
         run: |
-          echo "BRANCHES=$(cat <<EOF
-          [
-            {
-              \"branch\": \"development\",
-              \"required_approvals\": $COLLABORATOR_COUNT,
-              \"code_owner_reviews\": false
-            },
-            {
-              \"branch\": \"staging\",
-              \"required_approvals\": $COLLABORATOR_COUNT,
-              \"code_owner_reviews\": false
-            },
-            {
-              \"branch\": \"production\",
-              \"required_approvals\": $COLLABORATOR_COUNT,
-              \"code_owner_reviews\": true
-            }
-          ]
-          EOF
-          )" >> $GITHUB_ENV
+          BRANCHES="[ 
+            { \"branch\": \"development\", \"required_approvals\": $COLLABORATOR_COUNT, \"code_owner_reviews\": false }, 
+            { \"branch\": \"staging\", \"required_approvals\": $COLLABORATOR_COUNT, \"code_owner_reviews\": false }, 
+            { \"branch\": \"production\", \"required_approvals\": $COLLABORATOR_COUNT, \"code_owner_reviews\": true }
+          ]"
+          echo "BRANCHES=$BRANCHES" >> $GITHUB_ENV
 
       - name: Apply protection rules
         uses: actions/github-script@v6

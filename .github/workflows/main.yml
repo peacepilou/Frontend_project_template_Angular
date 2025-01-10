@@ -77,10 +77,18 @@ jobs:
             ${{ runner.os }}-node-modules-
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Start application
-        run: npm run start &
+      - name: Build application for the environment
+        run: npm run build:$npm_config_env
+
+      - name: Start application server
+        run: npm run start-server &
 
       - name: Run Cypress tests
-        run: npm run e2e
+        run: |
+          if [ "${{ github.base_ref }}" == "staging" ]; then
+            npm run e2e:ci:staging
+          elif [ "${{ github.base_ref }}" == "production" ]; then
+            npm run e2e:ci:production
+          fi
