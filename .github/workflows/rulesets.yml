@@ -1,0 +1,64 @@
+name: Apply Branch Rules
+
+on:
+  workflow_dispatch: # Manual trigger, make sure to enable this in the GitHub UI
+
+jobs:
+  apply-rules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository collaborators
+        id: get-collaborators
+        run: |
+          COLLABORATORS=$(gh api repos/${{ github.repository }}/collaborators --jq '.[].login')
+          echo "COLLABORATORS=$COLLABORATORS" >> $GITHUB_ENV
+          COLLABORATOR_COUNT=$(echo "$COLLABORATORS" | wc -w)
+          echo "COLLABORATOR_COUNT=$COLLABORATOR_COUNT" >> $GITHUB_ENV
+
+      - name: Define branch protection rules
+        id: define-rules
+        run: |
+          echo "::set-output name=branches::$(cat <<EOF
+          [
+            {
+              "branch": "development",
+              "required_approvals": $COLLABORATOR_COUNT,
+              "code_owner_reviews": false
+            },
+            {
+              "branch": "staging",
+              "required_approvals": $COLLABORATOR_COUNT,
+              "code_owner_reviews": false
+            },
+            {
+              "branch": "production",
+              "required_approvals": $COLLABORATOR_COUNT,
+              "code_owner_reviews": true
+            }
+          ]
+          EOF
+          )"
+
+      - name: Apply protection rules
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const branches = JSON.parse(`${
+              { steps.define-rules.outputs.branches }
+            }`);
+
+            for (const branch of branches) {
+              await github.rest.repos.updateBranchProtection({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch: branch.branch,
+                required_status_checks: null,
+                enforce_admins: true,
+                required_pull_request_reviews: {
+                  required_approving_review_count: branch.required_approvals,
+                  require_code_owner_reviews: branch.code_owner_reviews,
+                },
+                restrictions: null,
+              });
+            }
