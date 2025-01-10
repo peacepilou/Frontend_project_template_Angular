@@ -26,6 +26,14 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
       - name: Install dependencies
         run: npm install
 
@@ -42,10 +50,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-
+          node-version: '18'
+          
       - name: Install dependencies
         run: npm install
+      
+      - name: Run tests with increased memory
+        run: node --max-old-space-size=4096 ./node_modules/.bin/jest --verbose
 
       - name: Run unit tests
         run: npm test

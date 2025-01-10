@@ -11,7 +11,8 @@ const config: Config = {
   clearMocks: true,
   coverageDirectory: "coverage",
   coverageProvider: "v8",
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  maxWorkers: 1,
 };
 
 export default config;
