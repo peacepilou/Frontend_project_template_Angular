@@ -16,33 +16,47 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Define branch protection rules
-        id: define-rules
+      - name: Define branch protection rules for development
+        id: define-rules-development
         run: |
-          BRANCHES="[ 
-            { \"branch\": \"development\", \"required_approvals\": $COLLABORATOR_COUNT, \"code_owner_reviews\": false }, 
-            { \"branch\": \"staging\", \"required_approvals\": $COLLABORATOR_COUNT, \"code_owner_reviews\": false }, 
-            { \"branch\": \"production\", \"required_approvals\": $COLLABORATOR_COUNT, \"code_owner_reviews\": true }
-          ]"
-          echo "BRANCHES=$BRANCHES" >> $GITHUB_ENV
+          echo "Defining branch protection rules for development"
+          curl -X PUT \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{
+              "required_pull_request_reviews": {
+                "required_approving_review_count": '"$COLLABORATOR_COUNT"',
+                "require_code_owner_reviews": false
+              },
+              "enforce_admins": true
+            }' \
+            https://api.github.com/repos/${{ github.repository }}/branches/development/protection
 
-      - name: Apply protection rules
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const branches = JSON.parse(process.env.BRANCHES);
+      - name: Define branch protection rules for staging
+        id: define-rules-staging
+        run: |
+          echo "Defining branch protection rules for staging"
+          curl -X PUT \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{
+              "required_pull_request_reviews": {
+                "required_approving_review_count": '"$COLLABORATOR_COUNT"',
+                "require_code_owner_reviews": false
+              },
+              "enforce_admins": true
+            }' \
+            https://api.github.com/repos/${{ github.repository }}/branches/staging/protection
 
-            for (const branch of branches) {
-              await github.rest.repos.updateBranchProtection({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                branch: branch.branch,
-                required_status_checks: null,
-                enforce_admins: true,
-                required_pull_request_reviews: {
-                  required_approving_review_count: branch.required_approvals,
-                  require_code_owner_reviews: branch.code_owner_reviews,
-                },
-                restrictions: null,
-              });
-            }
+      - name: Define branch protection rules for production
+        id: define-rules-production
+        run: |
+          echo "Defining branch protection rules for production"
+          curl -X PUT \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{
+              "required_pull_request_reviews": {
+                "required_approving_review_count": '"$COLLABORATOR_COUNT"',
+                "require_code_owner_reviews": true
+              },
+              "enforce_admins": true
+            }' \
+            https://api.github.com/repos/${{ github.repository }}/branches/production/protection
