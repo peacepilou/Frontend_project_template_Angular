@@ -6,6 +6,11 @@ echo_yellow "⚡ Running branch name validation..."
 echo_separator_general
 echo
 
+if [ "$BYPASS_PROTECTED_FILES" = "true" ]; then
+    echo_yellow "⚠️ Bypass active: Skipping validate branches check."
+    exit 0
+fi
+
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
 
 BRANCH_PATTERN="^(feature|bugfix|hotfix|test)\/(issue-[0-9]+|no-ref)\/[a-z0-9\-]+$"
