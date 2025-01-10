@@ -1,0 +1,33 @@
+name: End-to-End Tests
+
+on:
+  pull_request:
+    branches:
+      - staging
+      - production
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - run: npm install
+      - run: npm run start &
+      
+      - name: Wait for app to be ready
+        run: |
+          until curl --silent --fail http://localhost:3000; do
+            echo "Waiting for app to be ready..."
+            sleep 5
+          done
+      
+      - run: npm run e2e
