@@ -12,7 +12,6 @@ const config: Config = {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   testEnvironment: 'node',
-  maxWorkers: 1,
 };
 
 export default config;

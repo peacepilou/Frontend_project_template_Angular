@@ -9,10 +9,6 @@ on:
       - development
       - staging
       - production
-  workflow_run:
-    workflows: ["lint.yml", "test.yml", "e2e.yml"]
-    types:
-      - completed
 
 jobs:
   lint:
@@ -42,7 +38,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -60,10 +55,9 @@ jobs:
 
       - name: Run unit tests
         run: npm test
-  
+
   e2e:
     runs-on: ubuntu-latest
-    needs: test
     if: github.event_name == 'pull_request' && (github.base_ref == 'staging' || github.base_ref == 'production')
     steps:
       - name: Checkout code

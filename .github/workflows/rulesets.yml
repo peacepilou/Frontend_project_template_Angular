@@ -1,7 +1,5 @@
-name: Apply Branch Rules
-
 on:
-  workflow_dispatch: # Manual trigger, make sure to enable this in the GitHub UI
+  workflow_dispatch:
 
 jobs:
   apply-rules:
@@ -21,34 +19,32 @@ jobs:
       - name: Define branch protection rules
         id: define-rules
         run: |
-          echo "::set-output name=branches::$(cat <<EOF
+          echo "BRANCHES=$(cat <<EOF
           [
             {
-              "branch": "development",
-              "required_approvals": $COLLABORATOR_COUNT,
-              "code_owner_reviews": false
+              \"branch\": \"development\",
+              \"required_approvals\": $COLLABORATOR_COUNT,
+              \"code_owner_reviews\": false
             },
             {
-              "branch": "staging",
-              "required_approvals": $COLLABORATOR_COUNT,
-              "code_owner_reviews": false
+              \"branch\": \"staging\",
+              \"required_approvals\": $COLLABORATOR_COUNT,
+              \"code_owner_reviews\": false
             },
             {
-              "branch": "production",
-              "required_approvals": $COLLABORATOR_COUNT,
-              "code_owner_reviews": true
+              \"branch\": \"production\",
+              \"required_approvals\": $COLLABORATOR_COUNT,
+              \"code_owner_reviews\": true
             }
           ]
           EOF
-          )"
+          )" >> $GITHUB_ENV
 
       - name: Apply protection rules
         uses: actions/github-script@v6
         with:
           script: |
-            const branches = JSON.parse(`${
-              { steps.define-rules.outputs.branches }
-            }`);
+            const branches = JSON.parse(process.env.BRANCHES);
 
             for (const branch of branches) {
               await github.rest.repos.updateBranchProtection({
