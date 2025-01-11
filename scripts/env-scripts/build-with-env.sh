@@ -1,25 +1,7 @@
 source "$(dirname "$0")/../utils.sh"
+source "$(dirname "$0")/common.sh"
 
-get_available_envs() {
-    echo "staging"
-    echo "production"
-}
-
-if [ -z "$1" ]; then
-    echo "🚨 No environment specified. Please provide one of the following:"
-    get_available_envs | while read env; do
-        echo "  → $env"
-    done
-    exit 1
-fi
-
-if ! get_available_envs | grep -w -q "$1"; then
-    echo "🚨 Invalid environment '$1'. Please choose from:"
-    get_available_envs | while read env; do
-        echo "  → $env"
-    done
-    exit 1
-fi
+validate_env "$1" "staging|production"
 
 echo_separator
 echo_green "🚀 Building for Environment: $1"
