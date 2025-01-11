@@ -6,6 +6,21 @@ This project has been initialized from Angular CLI version 18.2.
 
 🔥 To properly understand the structure of this project, open the `package.json` file and take your time reviewing it.
 
+
+## Branch protection rules
+- You need to manually add your protection rules from your repository instance settings :
+  - Lock pushes on production, staging & development ;
+  - Make PR mandatory towards production, staging & development
+  - PR, any branch ➡️ development :
+     - All contributors must add their review.
+  - PR, development ➡️ staging :
+     - Only the `development` branch can make a PR to the `staging` branch ;
+     - All contributors must add their review.
+  - PR, staging ➡️ production :
+    - Only the `staging` branch can make a PR to the `production` branch ;
+    - All contributors must add their review ;
+    - The owner of the repository must approve the PR.
+ 
 ## Same code format : Prettier
 - This project uses Prettier. 
 - Prettier makes sure that everyone has the same code format and standardize it. It helps developers to be focused on creating feature, not formatting. The same format for everyone also means easier code reviews.
